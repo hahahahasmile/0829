@@ -1,3 +1,4 @@
+
 import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDate;
@@ -8,18 +9,21 @@ import java.util.Scanner;
 public class LibraryManager {
 
     // ====== 설정 ======
-    private static final String PROP_FILE = "db.properties"; // classpath에 두기 (예: src/main/resources)
+    private static final String PROP_FILE = "db.properties"; // classpath (예: src/main/resources)
     private static final DateTimeFormatter DF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    // ====== 진입점 ======
-    public static void main(String[] args) {
+    /**
+     * 다른 메인 메뉴 안에서 호출 가능한 상호작용 콘솔 UI
+     * Main.java의 case "3"에서 LibraryManager.runInteractive()로 진입
+     */
+    public static void runInteractive() {
         try (Connection conn = getConnection();
              Scanner sc = new Scanner(System.in)) {
 
-            System.out.println("===== [도서관리] =====");
+            System.out.println("\n===== [도서관리] =====");
             boolean running = true;
             while (running) {
-                System.out.println("\n1) 도서등록  2) 도서삭제  3) 도서조회  4) 전체목록  0) 종료");
+                System.out.println("\n1) 도서등록  2) 도서삭제  3) 도서조회  4) 전체목록  0) 뒤로가기");
                 System.out.print("선택> ");
                 String sel = sc.nextLine().trim();
 
@@ -28,12 +32,12 @@ public class LibraryManager {
                     case "2" -> menuDeleteBook(conn, sc);
                     case "3" -> menuQueryBook(conn, sc);
                     case "4" -> listAllBooks(conn);
-                    case "0" -> running = false;
+                    case "0" -> running = false;   // 상위(Main) 메뉴로 복귀
                     default -> System.out.println("올바른 메뉴를 선택하세요.");
                 }
             }
-            System.out.println("종료합니다.");
         } catch (Exception e) {
+            System.out.println("[도서관리] 실행 중 오류: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -197,7 +201,6 @@ public class LibraryManager {
     }
 
     private static void deleteBook(Connection conn, String isbn) throws SQLException {
-        // FK(loan, …) 제약에 막히지 않도록: 활성 대여가 없어야 함 (상단에서 이미 체크)
         String sql = "DELETE FROM book WHERE isbn = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, isbn);

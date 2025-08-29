@@ -1,4 +1,3 @@
-package bookproject.src;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,8 +1,5 @@
-package bookproject.src;
 
 import java.util.Scanner;
-// SQLException 클래스를 가져와서 try-catch 블록에서 사용
-
 
 public class Main {
 
@@ -15,6 +12,7 @@ public class Main {
             System.out.println("\n--- 도서 관리 시스템 ---");
             System.out.println("1. 도서 대출");
             System.out.println("2. 도서 반납");
+            System.out.println("3. 도서 관리(등록/삭제/조회)");
             System.out.println("0. 종료");
             System.out.print("메뉴를 선택하세요: ");
 
@@ -32,6 +30,7 @@ public class Main {
                         System.out.println("회원 ID는 숫자로 입력해주세요.");
                     }
                     break;
+
                 case "2":
                     System.out.print("반납할 도서의 ISBN을 입력하세요: ");
                     String returnIsbn = scanner.nextLine();
@@ -43,10 +42,17 @@ public class Main {
                         System.out.println("회원 ID는 숫자로 입력해주세요.");
                     }
                     break;
+
+                case "3":
+                    // ▶ 여기서 도서관리 서브메뉴로 진입
+                    LibraryManager.runInteractive();
+                    break;
+
                 case "0":
                     System.out.println("시스템을 종료합니다.");
                     scanner.close();
                     return;
+
                 default:
                     System.out.println("잘못된 입력입니다. 다시 시도해주세요.");
                     break;
